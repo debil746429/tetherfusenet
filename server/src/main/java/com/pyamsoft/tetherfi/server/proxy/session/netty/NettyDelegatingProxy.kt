@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty
+package com.pyamsoft.tetherfi.server.proxy.session.netty
 
 import android.net.Network
 import com.pyamsoft.tetherfi.core.Timber
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.http.Http1ProxyHandler
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.socks.Socks4ProxyHandler
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.socks.Socks5ProxyHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.dropHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.http.Http1ProxyHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.Socks4ProxyHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.Socks5ProxyHandler
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.socket.SocketChannel
@@ -47,7 +48,7 @@ internal constructor(
   onClosing: () -> Unit,
   onError: (Throwable) -> Unit,
 ) :
-  NettyProxy(
+  com.pyamsoft.tetherfi.server.proxy.session.netty.NettyProxy(
     socketTagger = socketTagger,
     host = host,
     port = port,
@@ -65,7 +66,7 @@ internal constructor(
 
     // And bind our proxy relay handler
     pipeline.addLast(
-      DelegatingHandler(
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.DelegatingHandler(
         serverHostName = host,
         serverPort = port,
         isDebug = isDebug,
@@ -82,7 +83,7 @@ private class DelegatingHandler(
   private val isDebug: Boolean,
   private val socketTagger: SocketTagger,
   private val androidPreferredNetwork: Network?,
-) : ByteToMessageDecoder() {
+) : io.netty.handler.codec.ByteToMessageDecoder() {
 
   override fun decode(
     ctx: ChannelHandlerContext,
@@ -112,7 +113,7 @@ private class DelegatingHandler(
           pipeline.addLast(Socks4ServerDecoder())
 
           pipeline.addLast(
-            Socks4ProxyHandler(
+            _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.Socks4ProxyHandler(
               isDebug = isDebug,
               socketTagger = socketTagger,
               androidPreferredNetwork = androidPreferredNetwork,
@@ -127,7 +128,7 @@ private class DelegatingHandler(
           pipeline.addLast(Socks5CommandRequestDecoder())
 
           pipeline.addLast(
-            Socks5ProxyHandler(
+            _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.Socks5ProxyHandler(
               serverHostName = serverHostName,
               isDebug = isDebug,
               socketTagger = socketTagger,
@@ -141,7 +142,7 @@ private class DelegatingHandler(
 
           // And bind our proxy relay handler
           pipeline.addLast(
-            Http1ProxyHandler(
+            _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.http.Http1ProxyHandler(
               isDebug = isDebug,
               socketTagger = socketTagger,
               androidPreferredNetwork = androidPreferredNetwork,

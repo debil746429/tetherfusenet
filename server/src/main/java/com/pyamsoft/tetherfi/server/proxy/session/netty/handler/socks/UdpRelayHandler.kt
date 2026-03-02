@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.socks
+package com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks
 
 import android.net.Network
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.tetherfi.core.Timber
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.ProxyHandler
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.flushAndClose
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.newDatagramServer
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.ProxyHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.newDatagramServer
 import io.ktor.util.network.address
 import io.ktor.util.network.port
 import io.netty.buffer.ByteBuf
@@ -52,7 +52,7 @@ internal class UdpRelayHandler internal constructor(
   private val isForcedIPv4Upstream: Boolean,
   private val tcpControlChannel: Channel,
   private val isValidClient: (InetAddress) -> Boolean,
-) : ProxyHandler(
+) : com.pyamsoft.tetherfi.server.proxy.session.netty.handler.ProxyHandler(
   isDebug = isDebug,
   socketTagger = socketTagger,
   androidPreferredNetwork = androidPreferredNetwork,
@@ -76,21 +76,21 @@ internal class UdpRelayHandler internal constructor(
     }
 
     val reservedByteOne = buf.readByte()
-    if (reservedByteOne != RESERVED_BYTE) {
+    if (reservedByteOne != _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.RESERVED_BYTE) {
       Timber.w { "DROP: Expected reserve byte one, but got data: $reservedByteOne" }
       sendErrorAndClose(ctx, msg)
       return
     }
 
     val reservedByteTwo = buf.readByte()
-    if (reservedByteTwo != RESERVED_BYTE) {
+    if (reservedByteTwo != _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.RESERVED_BYTE) {
       Timber.w { "DROP: Expected reserve byte two, but got data: $reservedByteTwo" }
       sendErrorAndClose(ctx, msg)
       return
     }
 
     val fragment = buf.readByte()
-    if (fragment != FRAGMENT_ZERO) {
+    if (fragment != _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.FRAGMENT_ZERO) {
       Timber.w { "DROP: Fragments not supported: $fragment" }
       sendErrorAndClose(ctx, msg)
       return
@@ -140,7 +140,10 @@ internal class UdpRelayHandler internal constructor(
       destination = InetSocketAddress(destinationAddr, destinationPort)
     }
 
-    val bindAddress = when (val type = resolveSocks5AddressType(destination)) {
+    val bindAddress = when (val type =
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.resolveSocks5AddressType(
+        destination
+      )) {
       Socks5AddressType.IPv4 -> "0.0.0.0"
       Socks5AddressType.IPv6 -> "::"
       else -> {
@@ -151,21 +154,22 @@ internal class UdpRelayHandler internal constructor(
     }
 
     val serverChannel = ctx.channel()
-    val udpRelaySocket = newDatagramServer(
-      isDebug = isDebug,
-      channel = serverChannel, hostName = bindAddress,
-      socketTagger = socketTagger,
-      androidPreferredNetwork = androidPreferredNetwork,
-      onChannelOpened = { ch ->
-        ch.pipeline().addLast(
-          UdpRelayUpstreamHandler(
-            udpControlChannel = serverChannel,
-            client = sentFrom,
-            packet = DatagramPacket(data, destination),
+    val udpRelaySocket =
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.newDatagramServer(
+        isDebug = isDebug,
+        channel = serverChannel, hostName = bindAddress,
+        socketTagger = socketTagger,
+        androidPreferredNetwork = androidPreferredNetwork,
+        onChannelOpened = { ch ->
+          ch.pipeline().addLast(
+            _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.UdpRelayUpstreamHandler(
+              udpControlChannel = serverChannel,
+              client = sentFrom,
+              packet = DatagramPacket(data, destination),
+            )
           )
-        )
-      },
-    )
+        },
+      )
     val outbound = udpRelaySocket.channel()
     udpRelaySocket.addListener { future ->
       if (!future.isSuccess) {
@@ -309,14 +313,16 @@ internal class UdpRelayHandler internal constructor(
 
     if (tcpControlChannel.isActive) {
       Timber.d { "close control channel $tcpControlChannel" }
-      flushAndClose(tcpControlChannel)
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(
+        tcpControlChannel
+      )
     }
 
     val outbounds = allKnownOutbounds.getAndUpdate { emptySet() }
     outbounds.forEach { o ->
       if (o.isActive) {
         Timber.d { "close outbound channel $o" }
-        flushAndClose(o)
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(o)
       }
     }
   }

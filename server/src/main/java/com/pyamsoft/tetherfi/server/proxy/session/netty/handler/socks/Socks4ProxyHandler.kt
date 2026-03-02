@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.socks
+package com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks
 
 import android.net.Network
 import androidx.annotation.CheckResult
 import com.pyamsoft.tetherfi.core.Timber
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.dropHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.dropHandler
 import io.ktor.util.network.address
 import io.ktor.util.network.port
 import io.netty.channel.Channel
@@ -38,7 +38,7 @@ internal class Socks4ProxyHandler internal constructor(
   socketTagger: SocketTagger,
   androidPreferredNetwork: Network?,
   isDebug: Boolean,
-) : SocksProxyHandler<Socks4CommandRequest>(
+) : com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.SocksProxyHandler<Socks4CommandRequest>(
   socketTagger = socketTagger,
   androidPreferredNetwork = androidPreferredNetwork,
   isDebug = isDebug,

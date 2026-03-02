@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler
+package com.pyamsoft.tetherfi.server.proxy.session.netty.handler
 
 import android.net.Network
 import androidx.annotation.CallSuper
@@ -43,7 +43,9 @@ internal abstract class ProxyHandler internal constructor(
       Timber.d { "Re-assigning outbound channel $old -> $channel" }
       if (old.isActive) {
         Timber.d { "Close old outbound channel $old" }
-        flushAndClose(old)
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(
+          old
+        )
       }
     }
 
@@ -67,14 +69,18 @@ internal abstract class ProxyHandler internal constructor(
     outboundChannel?.also { outbound ->
       if (outbound.isActive) {
         Timber.d { "close outbound channel $outbound" }
-        flushAndClose(outbound)
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(
+          outbound
+        )
       }
     }
 
     val channel = ctx.channel()
     if (channel.isActive) {
       Timber.d { "close owner channel $channel" }
-      flushAndClose(channel)
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(
+        channel
+      )
     }
   }
 

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.http
+package com.pyamsoft.tetherfi.server.proxy.session.netty.handler.http
 
 import android.net.Network
 import androidx.annotation.CheckResult
 import com.pyamsoft.tetherfi.core.Timber
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.dropHandler
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.DefaultProxyHandler
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.RelayHandler
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.newOutboundConnection
+import com.pyamsoft.tetherfi.server.proxy.session.netty.dropHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.DefaultProxyHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.RelayHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.newOutboundConnection
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.http.DefaultFullHttpResponse
@@ -46,7 +46,7 @@ internal class Http1ProxyHandler internal constructor(
   socketTagger: SocketTagger,
   androidPreferredNetwork: Network?,
   isDebug: Boolean,
-) : DefaultProxyHandler(
+) : com.pyamsoft.tetherfi.server.proxy.session.netty.handler.DefaultProxyHandler(
   socketTagger = socketTagger,
   androidPreferredNetwork = androidPreferredNetwork,
   isDebug = isDebug,
@@ -75,14 +75,15 @@ internal class Http1ProxyHandler internal constructor(
 
     val clientChannel = ctx.channel()
 
-    val future = newOutboundConnection(
-      isDebug = isDebug,
-      channel = clientChannel,
-      hostName = parsed.resolvedHostName,
-      port = parsed.resolvedPort,
-      socketTagger = socketTagger,
-      androidPreferredNetwork = androidPreferredNetwork,
-    )
+    val future =
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.newOutboundConnection(
+        isDebug = isDebug,
+        channel = clientChannel,
+        hostName = parsed.resolvedHostName,
+        port = parsed.resolvedPort,
+        socketTagger = socketTagger,
+        androidPreferredNetwork = androidPreferredNetwork,
+      )
     val outbound = future.channel()
     future.addListener { future ->
       if (!future.isSuccess) {
@@ -115,7 +116,12 @@ internal class Http1ProxyHandler internal constructor(
       pipeline.dropHandler(this::class)
 
       // Add a relay for the internet outbound
-      pipeline.addLast(RelayHandler("HTTPS-CONNECT-${parsed.resolvedHostName}:${parsed.resolvedPort}", outbound))
+      pipeline.addLast(
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.RelayHandler(
+          "HTTPS-CONNECT-${parsed.resolvedHostName}:${parsed.resolvedPort}",
+          outbound
+        )
+      )
     }
   }
 
@@ -129,7 +135,7 @@ internal class Http1ProxyHandler internal constructor(
     val clientChannel = ctx.channel()
 
     val future =
-      newOutboundConnection(
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.newOutboundConnection(
         isDebug = isDebug,
         channel = clientChannel, hostName = parsed.resolvedHostName, port = parsed.resolvedPort,
         socketTagger = socketTagger,
@@ -173,7 +179,12 @@ internal class Http1ProxyHandler internal constructor(
       pipeline.dropHandler(this::class)
 
       // Add a relay for the internet outbound
-      pipeline.addLast(RelayHandler("HTTP-FORWARD-${parsed.resolvedHostName}:${parsed.resolvedPort}", outbound))
+      pipeline.addLast(
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.RelayHandler(
+          "HTTP-FORWARD-${parsed.resolvedHostName}:${parsed.resolvedPort}",
+          outbound
+        )
+      )
     }
   }
 
@@ -198,7 +209,7 @@ internal class Http1ProxyHandler internal constructor(
     private const val HTTPS_PREFIX = "https://"
 
     @CheckResult
-    private fun parseUriAndPort(uri: String, defaultPort: Int): HostAndPort? {
+    private fun parseUriAndPort(uri: String, defaultPort: Int): com.pyamsoft.tetherfi.server.proxy.session.netty.handler.http.HostAndPort? {
       if (uri.isBlank()) {
         Timber.w { "No URI without schema from: $uri" }
         return null
@@ -257,7 +268,7 @@ internal class Http1ProxyHandler internal constructor(
         path = hostAndMaybePath.substring(pathStartIndex + 1).ifBlank { "/" }
       }
 
-      return HostAndPort(
+      return _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.http.HostAndPort(
         resolvedHostName = host,
         resolvedPort = port,
         proxyCorrectedFilePath = path,

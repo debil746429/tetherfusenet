@@ -32,7 +32,7 @@ import com.pyamsoft.tetherfi.server.proxy.ServerDispatcher
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
 import com.pyamsoft.tetherfi.server.proxy.SocketTracker
 import com.pyamsoft.tetherfi.server.proxy.session.tcp.enforceBandwidthLimit
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.socks.UdpRelayUpstreamHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.UdpRelayUpstreamHandler
 import io.ktor.network.sockets.BoundDatagramSocket
 import io.ktor.network.sockets.Datagram
 import io.ktor.network.sockets.InetSocketAddress

@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty
+package com.pyamsoft.tetherfi.server.proxy.session.netty
 
 import android.net.Network
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
 import io.netty.channel.ChannelFactory
+import io.netty.channel.socket.nio.NioDatagramChannel
 import io.netty.channel.socket.nio.NioSocketChannel
+import java.nio.channels.DatagramChannel
 import java.nio.channels.SocketChannel
 
-internal class NetworkBoundSocketChannelFactory
+internal class NetworkBoundDatagramChannelFactory
 internal constructor(
     private val socketTagger: SocketTagger,
     private val androidPreferredNetwork: Network?,
-) : ChannelFactory<NioSocketChannel> {
+) : ChannelFactory<NioDatagramChannel> {
 
-  override fun newChannel(): NioSocketChannel {
+  override fun newChannel(): NioDatagramChannel {
     socketTagger.tagSocket()
 
-    val outboundSocketChannel = SocketChannel.open().apply { configureBlocking(false) }
+    val outboundSocketChannel = DatagramChannel.open().apply { configureBlocking(false) }
 
     val socket = outboundSocketChannel.socket()
     androidPreferredNetwork?.bindSocket(socket)
 
-    return NioSocketChannel(outboundSocketChannel)
+    return NioDatagramChannel(outboundSocketChannel)
   }
 }

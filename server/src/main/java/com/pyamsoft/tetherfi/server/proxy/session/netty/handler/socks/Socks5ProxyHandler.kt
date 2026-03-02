@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.socks
+package com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks
 
 import android.net.Network
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.tetherfi.core.Timber
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.dropHandler
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.newDatagramServer
+import com.pyamsoft.tetherfi.server.proxy.session.netty.dropHandler
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.newDatagramServer
 import io.ktor.util.network.address
 import io.ktor.util.network.port
 import io.netty.channel.Channel
@@ -46,7 +46,7 @@ internal class Socks5ProxyHandler internal constructor(
   socketTagger: SocketTagger,
   androidPreferredNetwork: Network?,
   isDebug: Boolean,
-) : SocksProxyHandler<Socks5CommandRequest>(
+) : com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.SocksProxyHandler<Socks5CommandRequest>(
   socketTagger = socketTagger,
   androidPreferredNetwork = androidPreferredNetwork,
   isDebug = isDebug,
@@ -90,7 +90,7 @@ internal class Socks5ProxyHandler internal constructor(
     }
 
     val updControlSocket =
-      newDatagramServer(
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.newDatagramServer(
         isDebug = isDebug,
         channel = channel,
         hostName = serverHostName,
@@ -98,7 +98,7 @@ internal class Socks5ProxyHandler internal constructor(
         androidPreferredNetwork = androidPreferredNetwork,
       ) { ch ->
         ch.pipeline().addLast(
-          UdpRelayHandler(
+          _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.UdpRelayHandler(
             isDebug = isDebug,
             socketTagger = socketTagger,
             androidPreferredNetwork = androidPreferredNetwork,
@@ -145,11 +145,17 @@ internal class Socks5ProxyHandler internal constructor(
       pipeline.dropHandler(this::class)
 
       // Tell proxy we've established connection so that NOW we can relay
-      Timber.d { "Open UDP Relay: ${resolveSocks5AddressType(relayControlAddress)} $relayControl" }
+      Timber.d { "Open UDP Relay: ${
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.resolveSocks5AddressType(
+          relayControlAddress
+        )
+      } $relayControl" }
       ctx.writeAndFlush(
         DefaultSocks5CommandResponse(
           Socks5CommandStatus.SUCCESS,
-          resolveSocks5AddressType(relayControlAddress),
+          _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.resolveSocks5AddressType(
+            relayControlAddress
+          ),
           relayControl.address,
           relayControl.port,
         )
@@ -230,7 +236,9 @@ internal class Socks5ProxyHandler internal constructor(
     ctx.writeAndFlush(
       DefaultSocks5CommandResponse(
         Socks5CommandStatus.SUCCESS,
-        resolveSocks5AddressType(remoteAddress),
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.resolveSocks5AddressType(
+          remoteAddress
+        ),
         remote.address,
         remote.port,
       )

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler
+package com.pyamsoft.tetherfi.server.proxy.session.netty.handler
 
 import android.net.Network
 import com.pyamsoft.tetherfi.core.Timber
@@ -28,7 +28,7 @@ internal abstract class DefaultProxyHandler internal constructor(
   socketTagger: SocketTagger,
   androidPreferredNetwork: Network?,
   isDebug: Boolean,
-) : ProxyHandler(
+) : com.pyamsoft.tetherfi.server.proxy.session.netty.handler.ProxyHandler(
   socketTagger = socketTagger,
   androidPreferredNetwork = androidPreferredNetwork,
   isDebug = isDebug,

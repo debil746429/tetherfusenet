@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty
+package com.pyamsoft.tetherfi.server.proxy.session.netty
 
 fun interface NettyServerStopper {
 

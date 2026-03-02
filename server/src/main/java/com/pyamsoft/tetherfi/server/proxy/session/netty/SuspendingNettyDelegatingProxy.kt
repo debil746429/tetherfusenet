@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty
+package com.pyamsoft.tetherfi.server.proxy.session.netty
 
 import android.net.Network
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
@@ -29,10 +29,10 @@ class SuspendingNettyDelegatingProxy(
   onOpened: () -> Unit,
   onClosing: () -> Unit,
   onError: (Throwable) -> Unit,
-) : SuspendingNettyProxy() {
+) : com.pyamsoft.tetherfi.server.proxy.session.netty.SuspendingNettyProxy() {
 
   private val proxy by lazy {
-    NettyDelegatingProxy(
+    _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.NettyDelegatingProxy(
       isDebug = isDebug,
       host = host,
       port = port,
@@ -44,7 +44,7 @@ class SuspendingNettyDelegatingProxy(
     )
   }
 
-  override fun provideProxy(): NettyProxy {
+  override fun provideProxy(): com.pyamsoft.tetherfi.server.proxy.session.netty.NettyProxy {
     return proxy
   }
 }

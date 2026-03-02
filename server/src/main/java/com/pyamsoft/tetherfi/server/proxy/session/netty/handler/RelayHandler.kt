@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler
+package com.pyamsoft.tetherfi.server.proxy.session.netty.handler
 
 import com.pyamsoft.tetherfi.core.Timber
 import io.netty.buffer.ByteBuf
@@ -57,8 +57,10 @@ internal constructor(
     try {
       Timber.d { "($id) Close inactive relay channel: $ctx" }
     } finally {
-      flushAndClose(ctx.channel())
-      flushAndClose(clientChannel)
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(ctx.channel())
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(
+        clientChannel
+      )
     }
   }
 
@@ -66,7 +68,7 @@ internal constructor(
     try {
       Timber.e(cause) { "($id) RelayChannel exception caught $ctx" }
     } finally {
-      flushAndClose(ctx.channel())
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(ctx.channel())
     }
   }
 }

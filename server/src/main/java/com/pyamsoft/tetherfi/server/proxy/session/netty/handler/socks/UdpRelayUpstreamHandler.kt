@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.socks
+package com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.tetherfi.core.Timber
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.handler.flushAndClose
+import com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose
 import io.ktor.util.network.address
 import io.ktor.util.network.port
 import io.netty.buffer.ByteBuf
@@ -52,15 +52,19 @@ internal class UdpRelayUpstreamHandler internal constructor(
     // May be able to initialize with 3
     return alloc.ioBuffer().apply {
       // 2 reserved
-      val res = RESERVED_BYTE_INT
+      val res =
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.RESERVED_BYTE_INT
       writeByte(res)
       writeByte(res)
 
       // No fragment
-      writeByte(FRAGMENT_ZERO_INT)
+      writeByte(_root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.FRAGMENT_ZERO_INT)
 
       // Address
-      writeByte(resolveSocks5AddressType(sourceAddr).byteValue().toInt())
+      writeByte(
+        _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.socks.resolveSocks5AddressType(
+          sourceAddr
+        ).byteValue().toInt())
       writeBytes(sourceAddr.address.address)
 
       // Port
@@ -82,13 +86,17 @@ internal class UdpRelayUpstreamHandler internal constructor(
   private fun closeChannels(ctx: ChannelHandlerContext) {
     if (udpControlChannel.isActive) {
       Timber.d { "close control channel $udpControlChannel" }
-      flushAndClose(udpControlChannel)
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(
+        udpControlChannel
+      )
     }
 
     val channel = ctx.channel()
     if (channel.isActive) {
       Timber.d { "close owner channel $channel" }
-      flushAndClose(channel)
+      _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.handler.flushAndClose(
+        channel
+      )
     }
   }
 

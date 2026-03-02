@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty
+package com.pyamsoft.tetherfi.server.proxy.session.netty
 
 import androidx.annotation.CheckResult
 import kotlinx.coroutines.NonCancellable
@@ -29,7 +29,7 @@ abstract class SuspendingNettyProxy internal constructor() {
   private val proxy by lazy { provideProxy() }
 
   private suspend fun startProxy() {
-    var stopper: NettyServerStopper? = null
+    var stopper: com.pyamsoft.tetherfi.server.proxy.session.netty.NettyServerStopper? = null
     try {
       stopper = proxy.start()
       awaitCancellation()
@@ -50,5 +50,5 @@ abstract class SuspendingNettyProxy internal constructor() {
     }
   }
 
-  @CheckResult protected abstract fun provideProxy(): NettyProxy
+  @CheckResult protected abstract fun provideProxy(): com.pyamsoft.tetherfi.server.proxy.session.netty.NettyProxy
 }

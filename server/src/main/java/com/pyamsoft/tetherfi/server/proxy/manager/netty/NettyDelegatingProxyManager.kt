@@ -20,8 +20,8 @@ import android.net.Network
 import com.pyamsoft.tetherfi.server.broadcast.BroadcastNetworkStatus
 import com.pyamsoft.tetherfi.server.network.SocketBinder
 import com.pyamsoft.tetherfi.server.proxy.SocketTagger
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.SuspendingNettyDelegatingProxy
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.SuspendingNettyProxy
+import com.pyamsoft.tetherfi.server.proxy.session.netty.SuspendingNettyDelegatingProxy
+import com.pyamsoft.tetherfi.server.proxy.session.netty.SuspendingNettyProxy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -44,16 +44,16 @@ internal constructor(
       onOpened: suspend () -> Unit,
       onClosing: suspend () -> Unit,
       onError: suspend (Throwable) -> Unit,
-  ): SuspendingNettyProxy {
-    return SuspendingNettyDelegatingProxy(
-        isDebug = isDebug,
-        host = hostConnection.hostName,
-        port = port,
-        socketTagger = socketTagger,
-        androidPreferredNetwork = network,
-        onOpened = { launch { onOpened() } },
-        onClosing = { launch { onClosing() } },
-        onError = { launch { onError(it) } },
+  ): com.pyamsoft.tetherfi.server.proxy.session.netty.SuspendingNettyProxy {
+    return _root_ide_package_.com.pyamsoft.tetherfi.server.proxy.session.netty.SuspendingNettyDelegatingProxy(
+      isDebug = isDebug,
+      host = hostConnection.hostName,
+      port = port,
+      socketTagger = socketTagger,
+      androidPreferredNetwork = network,
+      onOpened = { launch { onOpened() } },
+      onClosing = { launch { onClosing() } },
+      onError = { launch { onError(it) } },
     )
   }
 }

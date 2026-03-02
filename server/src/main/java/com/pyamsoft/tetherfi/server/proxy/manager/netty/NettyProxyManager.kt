@@ -23,7 +23,7 @@ import com.pyamsoft.tetherfi.server.broadcast.BroadcastNetworkStatus
 import com.pyamsoft.tetherfi.server.lock.Locker
 import com.pyamsoft.tetherfi.server.network.SocketBinder
 import com.pyamsoft.tetherfi.server.proxy.manager.ProxyManager
-import com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty.SuspendingNettyProxy
+import com.pyamsoft.tetherfi.server.proxy.session.netty.SuspendingNettyProxy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 
@@ -72,5 +72,5 @@ protected constructor(
       onOpened: suspend () -> Unit,
       onClosing: suspend () -> Unit,
       onError: suspend (Throwable) -> Unit,
-  ): SuspendingNettyProxy
+  ): com.pyamsoft.tetherfi.server.proxy.session.netty.SuspendingNettyProxy
 }

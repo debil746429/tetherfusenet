@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.tetherfi.server.proxy.session.tcp.http.netty
+package com.pyamsoft.tetherfi.server.proxy.session.netty
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.tetherfi.core.Timber
@@ -38,7 +38,7 @@ protected constructor(
 ) {
 
   @CheckResult
-  fun start(): NettyServerStopper {
+  fun start(): com.pyamsoft.tetherfi.server.proxy.session.netty.NettyServerStopper {
     // The boss group usually does not need more than a single thread allocated to it
     val bossGroup = MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory())
     val workerGroup = MultiThreadIoEventLoopGroup(NioIoHandler.newFactory())
@@ -48,7 +48,7 @@ protected constructor(
             .group(bossGroup, workerGroup)
             .channel(NioServerSocketChannel::class.java)
             .childHandler(
-                object : ChannelInitializer<SocketChannel>() {
+                object : io.netty.channel.ChannelInitializer<SocketChannel>() {
                   override fun initChannel(ch: SocketChannel) {
                     onChannelInitialized(ch)
                   }
@@ -62,7 +62,7 @@ protected constructor(
         bootstrap
             .bind(host, port)
             .apply {
-              addListener { future ->
+              _root_ide_package_.io.netty.channel.ChannelFuture.addListener { future ->
                 if (future.isSuccess) {
                   Timber.d { "Netty server started" }
                   onOpened()
@@ -75,7 +75,7 @@ protected constructor(
             }
             .channel()
             .apply {
-              closeFuture().addListener {
+              _root_ide_package_.io.netty.channel.Channel.closeFuture().addListener {
                 Timber.d { "Netty server is closing!" }
                 onClosing()
               }
