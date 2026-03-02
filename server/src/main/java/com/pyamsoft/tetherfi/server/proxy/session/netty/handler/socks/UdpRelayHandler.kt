@@ -125,6 +125,7 @@ internal constructor(
       val ipv4Address =
           if (addrType == Socks5AddressType.IPv4) destinationAddr
           else {
+            // TODO use netty non-blocking resolvers
             Timber.d { "Forcing UDP over IPv4 connection $addrType $destinationAddr" }
             InetAddress.getAllByName(destinationAddr)
                 // Only IPv4 addresses
