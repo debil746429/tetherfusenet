@@ -88,6 +88,7 @@ internal constructor(
       return
     }
 
+    val clientChannel = ctx.channel()
     val connectSocket =
         newOutboundConnection(
             isDebug = isDebug,
@@ -96,11 +97,24 @@ internal constructor(
             port = dstPort,
             socketTagger = socketTagger,
             androidPreferredNetwork = androidPreferredNetwork,
+            onChannelOpened = { ch ->
+              val pipeline = ch.pipeline()
+
+              // Read from the REMOTE and send back to the PROXY
+              pipeline.addLast(
+                  RelayHandler(
+                      id = "${msg.version()}-CONNECT-INBOUND-${dstAddr}:${dstPort}",
+                      writeToChannel = clientChannel,
+                      serverSocketTimeout = serverSocketTimeout,
+                  )
+              )
+            },
         )
+
     val outbound = connectSocket.channel()
     connectSocket.addListener { future ->
       if (!future.isSuccess) {
-        Timber.e(future.cause()) { "SOCKS proxied outbound failed" }
+        Timber.e(future.cause()) { "SOCKS CONNECT proxied outbound failed" }
         sendFailureAndClose(ctx, msg)
         return@addListener
       }
@@ -121,7 +135,7 @@ internal constructor(
       // Add a relay for the internet outbound
       pipeline.addLast(
           RelayHandler(
-              id = "SOCKS${msg.version()}-CONNECT-${dstAddr}:${dstPort}",
+              id = "${msg.version()}-CONNECT-OUTBOUND-${dstAddr}:${dstPort}",
               writeToChannel = outbound,
               serverSocketTimeout = serverSocketTimeout,
           )

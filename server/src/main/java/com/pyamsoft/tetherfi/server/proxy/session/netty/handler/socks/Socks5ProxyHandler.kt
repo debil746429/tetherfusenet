@@ -123,21 +123,21 @@ internal constructor(
     val controlSocket = updControlSocket.channel()
     updControlSocket.addListener { future ->
       if (!future.isSuccess) {
-        Timber.e(future.cause()) { "SOCKS proxied outbound failed" }
+        Timber.e(future.cause()) { "SOCKS UDP-ASSOC proxied outbound failed" }
         sendFailureAndClose(ctx, msg)
         return@addListener
       }
 
       val relayControl = controlSocket.localAddress()
       if (relayControl == null) {
-        Timber.w { "SOCKS proxied outbound remote==null" }
+        Timber.w { "SOCKS UDP-ASSOC proxied outbound remote==null" }
         sendFailureAndClose(ctx, msg)
         return@addListener
       }
 
       val relayControlAddress = relayControl.cast<InetSocketAddress>()
       if (relayControlAddress == null) {
-        Timber.w { "SOCKS proxied outbound remote is not InetSocketAddress" }
+        Timber.w { "SOCKS UDP-ASSOC proxied outbound remote is not InetSocketAddress" }
         sendFailureAndClose(ctx, msg)
         return@addListener
       }
