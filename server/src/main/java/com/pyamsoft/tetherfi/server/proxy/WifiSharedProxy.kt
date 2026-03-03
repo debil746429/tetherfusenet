@@ -166,7 +166,7 @@ internal constructor(
     }
 
     // TODO netty preference
-    val isNettyEnabled = true
+    val isNettyEnabled = IS_NETTY_ENABLED
     val isHttpEnabled = preferences.listenForHttpEnabledChanges().first()
     val isSocksEnabled = preferences.listenForSocksEnabledChanges().first()
 
@@ -440,7 +440,7 @@ internal constructor(
     @CheckResult
     suspend fun isReady(preferences: ProxyPreferences): Boolean {
       // TODO netty preference
-      val isNettyEnabled = true
+      val isNettyEnabled = IS_NETTY_ENABLED
       if (isNettyEnabled) {
         if (netty) {
           return true
@@ -466,6 +466,8 @@ internal constructor(
   }
 
   companion object {
+
+    private const val IS_NETTY_ENABLED = true
 
     private val UNCHANGED_SHOULD_NOT_HAPPEN_ERROR =
         AssertionError("ConnectionInfo.Unchanged should never escape the server-module internals.")
